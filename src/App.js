@@ -1,20 +1,33 @@
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState('');
-
-  const onChange = (event) => setKeyword(event.target.value);
-  const onClick = () => setValue((prev) => prev + 1);
-
-  useEffect(() => {
-    console.log('keyword change', keyword);
-  }, [keyword]);
+  const [toDo, setToDo] = useState('');
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (toDo === '') {
+      return;
+    }
+    setToDos((currentArray) => [toDo, ...currentArray]);
+    setToDo('');
+  };
   return (
     <div>
-      <input onChange={onChange} value={keyword} type="text" />
-      <h1>{counter}</h1>
-      <button onClick={onClick}>click</button>
+      <h1>My To Dos ({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          placeholder="write your todo"
+          onChange={onChange}
+          value={toDo}
+          type="text"
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr />
+      {toDos.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
     </div>
   );
 }
